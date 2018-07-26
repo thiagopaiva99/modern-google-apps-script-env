@@ -8,7 +8,7 @@ const destination = 'dist';
 
 const copyRules = [
   {
-    from: './src/**/*.html',
+    from: './app/**/*.html',
     flatten: true,
     to: path.resolve(__dirname, destination)
   },
@@ -17,7 +17,7 @@ const copyRules = [
     to: path.resolve(__dirname, destination)
   },
   {
-    from: './src/vendor/*.gs',
+    from: './app/vendor/*.gs',
     flatten: true,
     to: path.resolve(__dirname, destination)
   }
@@ -25,7 +25,7 @@ const copyRules = [
 
 module.exports = {
   context: __dirname,
-  entry: './src/index.js',
+  entry: './app/index.js',
   output: {
     filename: 'code.js',
     path: path.resolve(__dirname, destination),
