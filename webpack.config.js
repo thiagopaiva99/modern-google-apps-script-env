@@ -6,23 +6,6 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const destination = 'dist';
 
-const copyRules = [
-  {
-    from: './app/**/*.html',
-    flatten: true,
-    to: path.resolve(__dirname, destination)
-  },
-  {
-    from: './appsscript.json',
-    to: path.resolve(__dirname, destination)
-  },
-  {
-    from: './app/vendor/*.gs',
-    flatten: true,
-    to: path.resolve(__dirname, destination)
-  }
-];
-
 module.exports = {
   context: __dirname,
   entry: './app/index.js',
@@ -32,10 +15,26 @@ module.exports = {
     libraryTarget: 'this'
   },
   resolve: {
-    extensions: ['.js']
+    extensions: ['.ts', '.js']
   },
   optimization: {
-    minimizer: [new UglifyJSPlugin()]
+    minimizer: [
+      new UglifyJSPlugin({
+        uglifyOptions: {
+          ie8: true,
+          warnings: false,
+          mangle: false,
+          compress: {
+            properties: false,
+            warnings: false,
+            drop_console: false
+          },
+          output: {
+            beautify: true
+          }
+        }
+      })
+    ]
   },
   module: {
     rules: [
@@ -61,7 +60,22 @@ module.exports = {
   mode: 'production',
   plugins: [
     new CleanWebpackPlugin([destination]),
-    new CopyWebpackPlugin(copyRules),
+    new CopyWebpackPlugin([
+      {
+        from: './app/**/*.html',
+        flatten: true,
+        to: path.resolve(__dirname, destination)
+      },
+      {
+        from: './appsscript.json',
+        to: path.resolve(__dirname, destination)
+      },
+      {
+        from: './app/vendor/*.gs',
+        flatten: true,
+        to: path.resolve(__dirname, destination)
+      }
+    ]),
     new GasPlugin()
   ]
 };
